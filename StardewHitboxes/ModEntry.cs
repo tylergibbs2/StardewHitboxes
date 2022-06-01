@@ -5,6 +5,7 @@ using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Monsters;
+using StardewValley.Projectiles;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -133,6 +134,14 @@ namespace StardewHitboxes
                 setValue: value => Config.WeaponSwingHitboxColor = value.ToUpper()
             );
 
+            configMenu.AddTextOption(
+                mod: ModManifest,
+                name: () => "Projectile Hitbox Color",
+                tooltip: () => "The hexadecimal color of the hitbox for projectiles",
+                getValue: () => Config.ProjectileHitboxColor.ToUpper(),
+                setValue: value => Config.ProjectileHitboxColor = value.ToUpper()
+            );
+
             configMenu.AddNumberOption(
                 mod: ModManifest,
                 name: () => "Hitbox Opacity",
@@ -189,6 +198,12 @@ namespace StardewHitboxes
         public static void RenderWeaponAOE(Rectangle areaOfEffect)
         {
             weaponHitboxesToRender[areaOfEffect] = 15;
+        }
+
+        public static void DrawHitbox(SpriteBatch b, Projectile projectile)
+        {
+            Color color = ConvertFromHex(Config.ProjectileHitboxColor);
+            DrawHitbox(b, projectile.getBoundingBox(), color);
         }
 
         public static void DrawHitbox(SpriteBatch b, Character character)
