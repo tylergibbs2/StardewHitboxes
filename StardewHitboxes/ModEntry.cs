@@ -1,4 +1,4 @@
-using HarmonyLib;
+﻿using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -192,7 +192,7 @@ namespace StardewHitboxes
 
         public static void RenderWeaponAOE(Rectangle areaOfEffect)
         {
-            weaponHitboxesToRender[areaOfEffect] = 15;
+            weaponHitboxesToRender[areaOfEffect] = 5;
         }
 
         public static void DrawHitbox(SpriteBatch b, Projectile projectile)
