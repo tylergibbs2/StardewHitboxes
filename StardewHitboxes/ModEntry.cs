@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -169,11 +169,6 @@ namespace StardewHitboxes
                 weaponHitboxesToRender.Remove(rect);
         }
 
-        public static bool ShouldShowHitboxes()
-        {
-            return ShowHitboxes;
-        }
-
         private static Color ConvertFromHex(string s)
         {
             if (s.Length != 7)
@@ -214,6 +209,9 @@ namespace StardewHitboxes
 
         public static void DrawHitbox(SpriteBatch b, Rectangle rect, Color color)
         {
+            if (!ShowHitboxes)
+                return;
+
             b.Draw(
                 hitboxTexture,
                 Game1.GlobalToLocal(Game1.viewport, new Vector2(rect.X, rect.Y)),

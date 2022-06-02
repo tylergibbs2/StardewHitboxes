@@ -9,9 +9,6 @@ namespace StardewHitboxes.Patches
     {
         public static void Postfix(GameLocation __instance, SpriteBatch b)
         {
-            if (!ModEntry.ShouldShowHitboxes())
-                return;
-
             foreach (Farmer farmer in __instance.farmers)
                 ModEntry.DrawHitbox(b, farmer);
 
