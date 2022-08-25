@@ -23,7 +23,7 @@ namespace StardewHitboxes
 
         private static ModConfig Config;
 
-        private static Dictionary<Rectangle, int> weaponHitboxesToRender = new();
+        private static readonly Dictionary<Rectangle, int> weaponHitboxesToRender = new();
 
         public ModEntry()
         {
@@ -37,29 +37,24 @@ namespace StardewHitboxes
             hitboxTexture = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1);
             hitboxTexture.SetData(new[] { Color.White });
 
-            helper.Events.GameLoop.SaveLoaded += (o, e) =>
-            {
-                if (Config.Enabled)
-                {
-                    AllowToggle = true;
-                    ShowHitboxes = true;
-                }
-                else
-                {
-                    AllowToggle = false;
-                    ShowHitboxes = false;
-                }
-            };
-
-            helper.Events.Input.ButtonPressed += (o, e) =>
-            {
-                if (Config.ToggleKey.JustPressed() && AllowToggle)
-                    ShowHitboxes = !ShowHitboxes;
-            };
-
+            helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             helper.Events.GameLoop.GameLaunched += SetupGMCM;
 
+            helper.Events.Input.ButtonPressed += OnButtonPressed;
+
             helper.Events.Display.RenderedWorld += RenderedWorld;
+        }
+
+        private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
+        {
+            ShowHitboxes = false;
+            AllowToggle = Config.Enabled;
+        }
+
+        private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
+        {
+            if (Config.ToggleKey.JustPressed() && Context.IsWorldReady && AllowToggle)
+                ShowHitboxes = !ShowHitboxes;
         }
 
         private void SetupGMCM(object sender, GameLaunchedEventArgs e)
@@ -77,13 +72,9 @@ namespace StardewHitboxes
             configMenu.OnFieldChanged(ModManifest, (o, e) =>
             {
                 Config = Helper.ReadConfig<ModConfig>();
-                if (Config.Enabled)
-                    AllowToggle = true;
-                else
-                {
-                    AllowToggle = false;
+                AllowToggle = Config.Enabled;
+                if (!Config.Enabled)
                     ShowHitboxes = false;
-                }
             });
 
             configMenu.AddBoolOption(
